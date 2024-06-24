@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  </head>
+  <body>
+    <nav>
+      <a href="index.html">Home</a>
+    </nav>
+    <div x-data="loginHandler()">
+      <form @submit.prevent="login">
+        <div>
+          <label for="username">Username:</label>
+          <input type="text" id="username" x-model="username" required>
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input type="password" id="password" x-model="password" required>
+        </div>
+        <button type="submit">Login</button>
+        <div x-show="errorMessage" x-text="errorMessage" style="color: red;"></div>
+      </form>
+    </div>
+
+    <script>
+      function loginHandler() {
+        return {
+          username: '',
+          password: '',
+          errorMessage: '',
+          async login() {
+            this.errorMessage = '';
+            try {
+              const response = await fetch(' http://localhost:3000/get-token', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  username: this.username,
+                  password: this.password,
+                }),
+              });
+              const data = await response.json();
+              if (data.token) {
+                localStorage.setItem('jwt_token', data.token);
+                window.location.href = 'members.html';
+              } else {
+                this.errorMessage = 'Invalid username or password';
+              }
+            } catch (error) {
+              console.error('Error:', error);
+              this.errorMessage = 'An error occurred';
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
