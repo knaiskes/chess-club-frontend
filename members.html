@@ -4,37 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Members Page</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', async () => {
-        const token = localStorage.getItem('jwt_token');
-        if (!token) {
-          window.location.href = 'login.html';
-        } else {
-          try {
-            const response = await fetch('http://localhost:3000/api/v1/members', {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${token}`,
-              },
-            });
-            const data = await response.json();
-            console.log(data);
-            document.getElementById('content').innerText = JSON.stringify(data, null, 2);
-          } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('content').innerText = 'An error occurred while fetching data';
-          }
-        }
-      });
-    </script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
   </head>
   <body>
-    <nav>
-      <a href="index.html">Home</a>
-    </nav>
-    <h1>Dashboard</h1>
-    <div id="content">Loading...</div>
+    <div x-data="membersTable()" x-init="init()">
+      <h3 style="text-align: center">Members</h3>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Email</th>
+            <th>Is Active</th>
+            <th>FIDE Rating</th>
+            <th>Overdue Subscription</th>
+            <th>Profile Photo URL</th>
+            <th>Lichess Profile</th>
+            <th>Chess.com Profile</th>
+            <th>FIDE Profile</th>
+            <th>Joined At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="member in members" :key="member.id">
+            <tr>
+              <td x-text="member.id"></td>
+              <td x-text="member.firstname"></td>
+              <td x-text="member.lastname"></td>
+              <td x-text="member.age"></td>
+              <td x-text="member.gender"></td>
+              <td x-text="member.email"></td>
+              <td x-text="member.is_active ? 'Yes' : 'No'"></td>
+              <td x-text="member.fide_rating !== null ? member.fide_rating : 'N/A'"></td>
+              <td x-text="member.overdue_subscription ? 'Yes' : 'No'"></td>
+              <td x-text="member.profile_photo_url !== null ? member.profile_photo_url : 'N/A'"></td>
+              <td x-text="member.lichess_profile !== null ? member.lichess_profile : 'N/A'"></td>
+              <td x-text="member.chesscom_profile !== null ? member.chesscom_profile : 'N/A'"></td>
+              <td x-text="member.fide_profile !== null ? member.fide_profile : 'N/A'"></td>
+              <td x-text="new Date(member.joined_at).toLocaleString()"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      function membersTable() {
+        return {
+          members: [],
+          async init() {
+            await this.fetchMembers();
+          },
+          async fetchMembers() {
+	    const token = localStorage.getItem('jwt_token');
+            if (!token) {
+              window.location.href = 'login.html';
+            } else {
+              try {
+		const response = await fetch('http://localhost:3000/api/v1/members', {
+		  method: 'GET',
+		  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RVc2VyIiwiaWF0IjoxNzE5MTc5MjMwLCJleHAiOjE3MTk3ODQwMzB9.3vYCxbpiCi35RoyIz4JJ5eJWE6AEB_XX_Rc9rxn-Kk8'
+                  }
+		});
+		const data = await response.json();
+		this.members = data.members;
+              } catch (error) {
+		console.error('Error fetching members:', error);
+              }
+	    }
+          }
+        }
+      }
+    </script>
   </body>
 </html>
