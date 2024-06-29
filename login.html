@@ -5,27 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <link rel="stylesheet" href="css/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <nav>
-      <a href="index.html">Home</a>
-    </nav>
-    <div x-data="loginHandler()">
-      <form @submit.prevent="login">
-        <div>
-          <label for="username">Username:</label>
-          <input type="text" id="username" x-model="username" required>
-        </div>
-        <div>
-          <label for="password">Password:</label>
-          <input type="password" id="password" x-model="password" required>
-        </div>
-        <button type="submit">Login</button>
-        <div x-show="errorMessage" x-text="errorMessage" style="color: red;"></div>
-      </form>
-    </div>
 
+  <div class="flex items-center justify-center h-screen bg-gray-100">
+    <body x-data="loginHandler()">
+      <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+	<h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+	<form @submit.prevent="login">
+          <div class="mb-4">
+            <label for="username" class="block text-gray-700 mb-2">Username</label>
+            <input x-model="username" required type="text" id="username" class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+          </div>
+          <div class="mb-6">
+            <label for="password" class="block text-gray-700 mb-2">Password</label>
+            <input x-model="password" required type="password" id="password" class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+          </div>
+	  <div x-show="errorMessage" x-text="errorMessage" class="mb-4 text-red-600 text-center"></div>
+          <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700">Login</button>
+	</form>
+      </div>
+  </div>
     <script>
       function loginHandler() {
         return {
