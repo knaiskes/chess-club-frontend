@@ -1,0 +1,11 @@
+<nav class="flex items-center justify-center mb-5 h-16 bg-gray-800 text-white">
+  <div class="">
+    <a href="members.html" class="px-3 hover:text-gray-400">Members</a>
+    <a href="#" class="px-3 hover:text-gray-400">Link 2</a>
+  </div>
+  <div class="mx-4">
+    </div>
+  <div class="ml-auto" x-data="{ logout: function() { localStorage.removeItem('jwt_token'); window.location.href = 'login.html';} }">
+    <a x-on:click="logout()" style="cursor: pointer;" class="px-3 hover:text-gray-400">Logout</a>
+  </div>
+</nav>
