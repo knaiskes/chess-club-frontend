@@ -15,7 +15,17 @@
   <body x-data x-init="fetch('./navbar.html').then(response => response.text()).then(html => $refs.navbar.innerHTML = html)">
     <div x-ref="navbar"></div>
     <div x-data="memberDetails()" x-init="init()" x-cloak>
-      <h4 class="mb-10 text-4xl text-center font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-gray" x-text="`${member.firstname} ${member.lastname}`"></h4>
+      <div class="flex items-center justify-center">
+	<template x-if="member.profile_photo_url">
+	  <img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-100 dark:ring-gray-300" :src="member.profile_photo_url" alt="memberInitials()">
+	</template>
+	<template x-if="!member.profile_photo_url">
+	  <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+	    <span class="font-medium text-gray-600 dark:text-gray-300" x-text="memberInitials()"></span>
+	  </div>
+	</template>
+	<h4 class="ml-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-gray flex items-center mb-4" x-text="`${member.firstname} ${member.lastname}`"></h4>
+      </div>
       <div class="overflow-x-auto">
 	<table class="min-w-full divide-y divide-gray-200 border-collapse">
 	  <thead class="bg-gray-50">
@@ -28,7 +38,6 @@
               <th class="px-6 py-3 text-left text-xs tracking-wider">Is Active</th>
               <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">FIDE Rating</th>
               <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Overdue Subscription</th>
-              <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Profile Photo URL</th>
               <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Lichess Profile</th>
               <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Chess.com Profile</th>
               <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">FIDE Profile</th>
@@ -45,7 +54,6 @@
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.is_active ? 'Yes' : 'No'"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.fide_rating !== null ? member.fide_rating : 'N/A'"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.overdue_subscription ? 'Yes' : 'No'"></td>
-	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.profile_photo_url !== null ? member.profile_photo_url : 'N/A'"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.lichess_profile !== null ? member.lichess_profile : 'N/A'"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.chesscom_profile !== null ? member.chesscom_profile : 'N/A'"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.fide_profile !== null ? member.fide_profile : 'N/A'"></td>
@@ -54,9 +62,7 @@
 	  </tbody>
 	</table>
       </div>
-
     </div>
-
 
     <script>
       function memberDetails() {
@@ -86,7 +92,13 @@
 		console.error('Error fetching member details:', error);
               }
 	    }
-          }
+          },
+	  hasPhoto() {
+            return this.profile_photo_url !== null;
+	  },
+	  memberInitials() {
+	    return this.member.firstname && this.member.lastname ? `${this.member.firstname[0]}${this.member.lastname[0]}` : 'AN';
+	  }
         }
       }
     </script>
