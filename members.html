@@ -8,106 +8,140 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       [x-cloak] {
-	  display: none !important;
+          display: none !important;
       }
     </style>
   </head>
   <body x-data x-init="fetch('./navbar.html').then(response => response.text()).then(html => $refs.navbar.innerHTML = html)">
     <div x-ref="navbar"></div>
+
     <div x-data="membersTable()" x-init="init()" x-cloak>
       <h4 class="mb-10 text-4xl text-center font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-gray">Members</h4>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 border-collapse">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">First Name</th>
-                        <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Last Name</th>
-                        <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Age</th>
-                        <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Active</th>
-                        <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Joined At</th>
-                        <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Profile</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <template x-for="member in paginatedMembers" :key="member.id">
-                        <tr class="hover:bg-gray-100">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.firstname"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.lastname"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.age"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.email"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.is_active"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="new Date(member.joined_at).toLocaleString()"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <a class="text-blue-700" :href="'member.html?id=' + member.id">View</a>
-                            </td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
-        </div>
+      <div class="ml-2 mr-2">
+	<input 
+	  class="px-6 py-2 mb-6 rounded-md border-2 border-gray-300 bg-gray-50 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent" 
+	  type="text" 
+	  x-model="query" 
+	  placeholder="Search" 
+	  @input.debounce.500ms="sendSearchQuery">
 
-        <div class="flex justify-between items-center mt-4 mr-1 ml-1">
-            <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
-            <span>Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span></span>
-            <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
-        </div>
+        <table class="min-w-full divide-y divide-gray-200 border-collapse">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">First Name</th>
+              <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Last Name</th>
+              <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Age</th>
+              <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Active</th>
+              <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Joined At</th>
+              <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Profile</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <template x-for="member in paginatedMembers" :key="member.id">
+              <tr class="hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.firstname"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.lastname"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.age"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.email"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.is_active"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="new Date(member.joined_at).toLocaleString()"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <a class="text-blue-700" :href="'member.html?id=' + member.id">View</a>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
 
+      <div class="flex justify-between items-center mt-4 mr-1 ml-1">
+        <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
+        <span>Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span></span>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+      </div>
     </div>
 
-
     <script>
-  function membersTable() {
-    return {
-      members: [],
-      currentPage: 1,
-      perPage: 10,
+      function membersTable() {
+        return {
+          members: [],
+          currentPage: 1,
+          perPage: 10,
+          query: '',
 
-      async init() {
-        await this.fetchMembers();
-      },
-      async fetchMembers() {
-        const token = localStorage.getItem('jwt_token');
-        if (!token) {
-          window.location.href = 'login.html';
-        } else {
-          try {
-            const response = await fetch('http://localhost:3000/api/v1/members', {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+          async init() {
+            await this.fetchMembers();
+          },
+
+          async fetchMembers() {
+            const token = localStorage.getItem('jwt_token');
+            if (!token) {
+              window.location.href = 'login.html';
+            } else {
+              try {
+                const response = await fetch('http://localhost:3000/api/v1/members', {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  }
+                });
+                const data = await response.json();
+                this.members = data.members;
+              } catch (error) {
+                console.error('Error fetching members:', error);
               }
-            });
-            const data = await response.json();
-            this.members = data.members;
-          } catch (error) {
-            console.error('Error fetching members:', error);
+            }
+          },
+
+          get totalPages() {
+            return Math.ceil(this.members.length / this.perPage);
+          },
+
+          get paginatedMembers() {
+            const start = (this.currentPage - 1) * this.perPage;
+            const end = this.currentPage * this.perPage;
+            return this.members.slice(start, end);
+          },
+
+          nextPage() {
+            if (this.currentPage < this.totalPages) {
+              this.currentPage++;
+            }
+          },
+
+          prevPage() {
+            if (this.currentPage > 1) {
+              this.currentPage--;
+            }
+          },
+
+          async sendSearchQuery() {
+            const apiUrl = 'http://localhost:3000/api/v1/members';
+            const url = `${apiUrl}?search=${encodeURIComponent(this.query)}`;
+
+            try {
+	      const token = localStorage.getItem('jwt_token');
+              if (!token) {
+		window.location.href = 'login.html';
+              }
+              const response = await fetch(url, {
+		method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                }
+	      });
+              const data = await response.json();
+              this.members = data.members;
+              this.currentPage = 1; // Reset to first page
+            } catch (error) {
+              console.error('Error:', error);
+            }
           }
         }
-      },
-      get totalPages() {
-        return Math.ceil(this.members.length / this.perPage);
-      },
-      get paginatedMembers() {
-        const start = (this.currentPage - 1) * this.perPage;
-        const end = this.currentPage * this.perPage;
-        return this.members.slice(start, end);
-      },
-      nextPage() {
-        if (this.currentPage < this.totalPages) {
-          this.currentPage++;
-        }
-      },
-      prevPage() {
-        if (this.currentPage > 1) {
-          this.currentPage--;
-        }
       }
-    }
-  }
-</script>
-
-
+    </script>
   </body>
 </html>
