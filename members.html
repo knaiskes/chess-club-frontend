@@ -79,7 +79,7 @@
           },
 
           async fetchMembers() {
-            const token = localStorage.getItem('jwt_token');
+            const token = localStorage.getItem('chess_club_token');
             if (!token) {
               window.location.href = 'login.html';
             } else {
@@ -127,7 +127,7 @@
             const url = `${apiUrl}?search=${encodeURIComponent(this.query)}`;
 
             try {
-	      const token = localStorage.getItem('jwt_token');
+	      const token = localStorage.getItem('chess_club_token');
               if (!token) {
 		window.location.href = 'login.html';
               }
