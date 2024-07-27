@@ -48,7 +48,7 @@
               });
               const data = await response.json();
               if (data.token) {
-                localStorage.setItem('jwt_token', data.token);
+                localStorage.setItem('chess_club_token', data.token);
                 window.location.href = 'members.html';
               } else {
                 this.errorMessage = 'Invalid username or password';
