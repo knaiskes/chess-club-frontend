@@ -16,10 +16,10 @@
     <div x-ref="navbar"></div>
     <div x-data="memberDetails()" x-init="init()" x-cloak>
       <div class="flex items-center justify-center">
-	<template x-if="member.profile_photo_url">
+	<template x-if="hasPhoto()">
 	  <img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-100 dark:ring-gray-300" :src="member.profile_photo_url" alt="memberInitials()">
 	</template>
-	<template x-if="!member.profile_photo_url">
+	<template x-if="!hasPhoto()">
 	  <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
 	    <span class="font-medium text-gray-600 dark:text-gray-300" x-text="memberInitials()"></span>
 	  </div>
@@ -94,7 +94,7 @@
 	    }
           },
 	  hasPhoto() {
-            return this.profile_photo_url !== null;
+            return this.profile_photo_url;
 	  },
 	  memberInitials() {
 	    return this.member.firstname && this.member.lastname ? `${this.member.firstname[0]}${this.member.lastname[0]}` : 'AN';
