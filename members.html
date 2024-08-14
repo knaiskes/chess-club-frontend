@@ -47,7 +47,9 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.lastname"></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.age"></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.email"></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.is_active"></td>
+		<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.is_active ? '&#10004;' : '&#x2715;'"
+		    :class="member.is_active ? 'text-green-500' : 'text-red-500'">
+		</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="new Date(member.joined_at).toLocaleString()"></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <a class="text-blue-700" :href="'member.html?id=' + member.id">View</a>

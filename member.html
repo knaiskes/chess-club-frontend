@@ -51,7 +51,9 @@
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.age"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.gender"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.email"></td>
-	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.is_active ? 'Yes' : 'No'"></td>
+	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.is_active ? '&#10004;' : '&#x2715;'"
+		  :class="member.is_active ? 'text-green-500' : 'text-red-500'">
+	      </td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.fide_rating !== null ? member.fide_rating : 'N/A'"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.overdue_subscription ? 'Yes' : 'No'"></td>
 	      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.lichess_profile !== null ? member.lichess_profile : 'N/A'"></td>
