@@ -1,0 +1,28 @@
+{
+  "name": "chess-club-frontend",
+  "version": "1.0.0",
+  "description": "A simple Web UI for my chess club",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/style.css -o ./dist/style.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knaiskes/chess-club-frontend.git"
+  },
+  "author": "Kiriakos Naiskes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/knaiskes/chess-club-frontend/issues"
+  },
+  "homepage": "https://github.com/knaiskes/chess-club-frontend#readme",
+  "dependencies": {
+    "alpinejs": "^3.14.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10"
+  }
+}
