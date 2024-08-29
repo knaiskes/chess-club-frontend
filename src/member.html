@@ -12,7 +12,7 @@
       }
     </style>
   </head>
-  <body x-data="memberDetails()" x-init="init()" x-cloak>
+  <body x-data="memberDetails()" x-init="fetch('./navbar.html').then(response => response.text()).then(html => $refs.navbar.innerHTML = html)" x-cloak>
     <div x-ref="navbar"></div>
     <div class="flex items-center justify-center">
       <template x-if="hasPhoto()">
