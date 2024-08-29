@@ -90,6 +90,11 @@
 	</div>
 
 	<div class="mb-4">
+	  <label class="block text-gray-700">Age</label>
+	  <input type="number" min="1" x-model="tempMember.age" class="w-full px-3 py-2 border rounded" />
+	</div>
+
+	<div class="mb-4">
 	  <label class="block text-gray-700">Gender</label>
 	  <select x-model="tempMember.gender" class="w-full px-3 py-2 border rounded"
 		  :class="{'border-red-500': !tempMember.gender}" required>
@@ -106,18 +111,13 @@
 	</div>
 
 	<div class="mb-4">
-	  <label class="block text-gray-700">Age</label>
-	  <input type="number" min="1" x-model="tempMember.age" class="w-full px-3 py-2 border rounded" />
+	  <label class="block text-gray-700">Overdue Subscription</label>
+	  <input type="checkbox" x-model="tempMember.overdue_subscription" class="px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Fide Rating</label>
 	  <input type="number" min="1" x-model="tempMember.fide_rating" class="w-full px-3 py-2 border rounded" />
-	</div>
-
-	<div class="mb-4">
-	  <label class="block text-gray-700">Overdue Subscription</label>
-	  <input type="checkbox" x-model="tempMember.overdue_subscription" class="px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
