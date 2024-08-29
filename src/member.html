@@ -73,26 +73,26 @@
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">First Name</label>
-	  <input type="text" x-model="member.firstname" class="w-full px-3 py-2 border rounded"
-		 :class="{'border-red-500': !member.firstname}" required />
+	  <input type="text" x-model="tempMember.firstname" class="w-full px-3 py-2 border rounded"
+		 :class="{'border-red-500': !tempMember.firstname}" required />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Last Name</label>
-	  <input type="text" x-model="member.lastname" class="w-full px-3 py-2 border rounded"
-		 :class="{'border-red-500': !member.lastname}" required />
+	  <input type="text" x-model="tempMember.lastname" class="w-full px-3 py-2 border rounded"
+		 :class="{'border-red-500': !tempMember.lastname}" required />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Email</label>
-	  <input type="email" x-model="member.email" class="w-full px-3 py-2 border rounded"
-		 :class="{'border-red-500': !member.email}" required />
+	  <input type="email" x-model="tempMember.email" class="w-full px-3 py-2 border rounded"
+		 :class="{'border-red-500': !tempMember.email}" required />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Gender</label>
-	  <select x-model="member.gender" class="w-full px-3 py-2 border rounded"
-		  :class="{'border-red-500': !member.gender}" required>
+	  <select x-model="tempMember.gender" class="w-full px-3 py-2 border rounded"
+		  :class="{'border-red-500': !tempMember.gender}" required>
             <option value="" disabled>Select your gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -102,37 +102,37 @@
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Is Active</label>
-	  <input type="checkbox" x-model="member.is_active" class="px-3 py-2 border rounded" />
+	  <input type="checkbox" x-model="tempMember.is_active" class="px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Age</label>
-	  <input type="number" min="1" x-model="member.age" class="w-full px-3 py-2 border rounded" />
+	  <input type="number" min="1" x-model="tempMember.age" class="w-full px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Fide Rating</label>
-	  <input type="number" min="1" x-model="member.fide_rating" class="w-full px-3 py-2 border rounded" />
+	  <input type="number" min="1" x-model="tempMember.fide_rating" class="w-full px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Overdue Subscription</label>
-	  <input type="checkbox" x-model="member.overdue_subscription" class="px-3 py-2 border rounded" />
+	  <input type="checkbox" x-model="tempMember.overdue_subscription" class="px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Lichess Profile</label>
-	  <input type="text" x-model="member.lichess_profile" class="w-full px-3 py-2 border rounded" />
+	  <input type="text" x-model="tempMember.lichess_profile" class="w-full px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Chess.com Profile</label>
-	  <input type="text" x-model="member.chesscom_profile" class="w-full px-3 py-2 border rounded" />
+	  <input type="text" x-model="tempMember.chesscom_profile" class="w-full px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Fide Profile</label>
-	  <input type="text" x-model="member.fide_profile" class="w-full px-3 py-2 border rounded" />
+	  <input type="text" x-model="tempMember.fide_profile" class="w-full px-3 py-2 border rounded" />
 	</div>
 
 	<div x-show="editModalErrorMessage" class="mb-4 text-red-500" x-text="editModalErrorMessage"></div>
@@ -143,8 +143,6 @@
 	</div>
       </div>
     </div>
-
-
 
     <!-- Delete Modal -->
     <div x-show="isDeleteModalOpen" @click.away="closeDeleteModal()" x-cloak class="fixed inset-0 flex items-center justify-center z-50">
@@ -165,6 +163,20 @@
       function memberDetails() {
         return {
           member: [],
+	  member: {
+            firstname: '',
+            lastname: '',
+            email: '',
+            gender: '',
+            is_active: false,
+            age: null,
+            fide_rating: null,
+            overdue_subscription: false,
+            lichess_profile: '',
+            chesscom_profile: '',
+            fide_profile: ''
+	  },
+	  tempMember: {},
           isModalOpen: false,
           isDeleteModalOpen: false,
 	  editModalErrorMessage: '',
@@ -206,6 +218,7 @@
           },
           
           openModal() {
+	    this.tempMember = JSON.parse(JSON.stringify(this.member));
             this.isModalOpen = true;
           },
           
@@ -222,6 +235,7 @@
           },
           
           async saveChanges() {
+	    this.member = JSON.parse(JSON.stringify(this.tempMember));
             try {
 
 	      if (!this.member.firstname) {
