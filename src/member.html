@@ -25,6 +25,11 @@
       </template>
       <h4 class="ml-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-gray flex items-center mb-4" x-text="`${member.firstname} ${member.lastname}`"></h4>
     </div>
+
+    <div class="flex justify-end mt-4 mb-4 mr-4">
+      <button @click="openModal()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Edit Member</button>
+      <button @click="openDeleteModal()" class="ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete Member</button>
+    </div>
     
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 border-collapse">
@@ -32,40 +37,37 @@
           <tr>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">First Name</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Last Name</th>
+	    <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Email</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Age</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Gender</th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Email</th>
             <th class="px-6 py-3 text-left text-xs tracking-wider">Is Active</th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">FIDE Rating</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Overdue Subscription</th>
+	    <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Joined At</th>
+	    <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">FIDE Rating</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Lichess Profile</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Chess.com Profile</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">FIDE Profile</th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Joined At</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <tr class="hover:bg-gray-100">
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.firstname"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.lastname"></td>
+	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.email"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.age"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.gender"></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.email"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.is_active ? '&#10004;' : '&#x2715;'" :class="member.is_active ? 'text-green-500' : 'text-red-500'"></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.fide_rating !== null ? member.fide_rating : 'N/A'"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.overdue_subscription ? 'Yes' : 'No'"></td>
+	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="new Date(member.joined_at).toDateString()"></td>
+	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.fide_rating !== null ? member.fide_rating : 'N/A'"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.lichess_profile !== null ? member.lichess_profile : 'N/A'"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.chesscom_profile !== null ? member.chesscom_profile : 'N/A'"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.fide_profile !== null ? member.fide_profile : 'N/A'"></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="new Date(member.joined_at).toDateString()"></td>
           </tr>
         </tbody>
       </table>
     </div>
-    
-    <button @click="openModal()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Edit Member</button>
-    <button @click="openDeleteModal()" class="mt-4 ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete Member</button>
-    
+
     <!-- Edit Modal -->
     <div x-show="isModalOpen" @click.away="closeModal()" x-cloak class="fixed inset-0 flex items-center justify-center z-50">
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl h-auto max-h-screen overflow-y-auto">
@@ -90,10 +92,14 @@
 	</div>
 
 	<div class="mb-4">
+	  <label class="block text-gray-700">Age</label>
+	  <input type="number" min="1" x-model="tempMember.age" class="w-full px-3 py-2 border rounded" />
+	</div>
+
+	<div class="mb-4">
 	  <label class="block text-gray-700">Gender</label>
 	  <select x-model="tempMember.gender" class="w-full px-3 py-2 border rounded"
 		  :class="{'border-red-500': !tempMember.gender}" required>
-            <option value="" disabled>Select your gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
@@ -106,18 +112,13 @@
 	</div>
 
 	<div class="mb-4">
-	  <label class="block text-gray-700">Age</label>
-	  <input type="number" min="1" x-model="tempMember.age" class="w-full px-3 py-2 border rounded" />
+	  <label class="block text-gray-700">Overdue Subscription</label>
+	  <input type="checkbox" x-model="tempMember.overdue_subscription" class="px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
 	  <label class="block text-gray-700">Fide Rating</label>
 	  <input type="number" min="1" x-model="tempMember.fide_rating" class="w-full px-3 py-2 border rounded" />
-	</div>
-
-	<div class="mb-4">
-	  <label class="block text-gray-700">Overdue Subscription</label>
-	  <input type="checkbox" x-model="tempMember.overdue_subscription" class="px-3 py-2 border rounded" />
 	</div>
 
 	<div class="mb-4">
