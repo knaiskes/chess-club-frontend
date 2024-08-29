@@ -25,6 +25,11 @@
       </template>
       <h4 class="ml-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-gray flex items-center mb-4" x-text="`${member.firstname} ${member.lastname}`"></h4>
     </div>
+
+    <div class="flex justify-end mt-4 mb-4 mr-4">
+      <button @click="openModal()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Edit Member</button>
+      <button @click="openDeleteModal()" class="ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete Member</button>
+    </div>
     
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 border-collapse">
@@ -62,10 +67,7 @@
         </tbody>
       </table>
     </div>
-    
-    <button @click="openModal()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Edit Member</button>
-    <button @click="openDeleteModal()" class="mt-4 ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete Member</button>
-    
+
     <!-- Edit Modal -->
     <div x-show="isModalOpen" @click.away="closeModal()" x-cloak class="fixed inset-0 flex items-center justify-center z-50">
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl h-auto max-h-screen overflow-y-auto">
