@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club INFO</title>
+    <link rel="stylesheet" href="../dist/style.css">
+    <script src="../node_modules/alpinejs/dist/cdn.js" defer></script>
+    <style>
+      [x-cloak] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body x-data="clubDetails()" x-init="fetch('./navbar.html').then(response => response.text()).then(html => $refs.navbar.innerHTML = html)" x-cloak>
+    <div x-ref="navbar"></div>
+    <div class="flex items-center justify-center">
+      <h4 class="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-gray flex items-center mb-4" x-text="club.name"></h4>
+    </div>
+
+    <div class="flex justify-end mt-4 mb-4 mr-4">
+      <button @click="openModal()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Edit Club</button>
+    </div>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 border-collapse">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Address</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Description</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr class="hover:bg-gray-100">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="club.name"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="club.address"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <a :href="'mailto:' + club.email" class="text-blue-500 hover:underline" x-text="club.email"></a>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="club.description"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Edit Modal -->
+    <div x-show="isModalOpen" @click.away="closeModal()" x-cloak class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl h-auto max-h-screen overflow-y-auto">
+        <h2 class="text-2xl font-bold mb-4">Edit Club</h2>
+
+        <div class="mb-4">
+          <label class="block text-gray-700">Name</label>
+          <input type="text" x-model="tempClub.name" class="w-full px-3 py-2 border rounded" required />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700">Address</label>
+          <input type="text" x-model="tempClub.address" class="w-full px-3 py-2 border rounded" required />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700">Email</label>
+          <input type="email" x-model="tempClub.email" class="w-full px-3 py-2 border rounded" required />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700">Description</label>
+          <textarea x-model="tempClub.description" class="w-full px-3 py-2 border rounded" required></textarea>
+        </div>
+
+        <div class="flex justify-end">
+          <button @click="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 mr-2">Cancel</button>
+          <button @click="saveChanges()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function clubDetails() {
+        return {
+          club: {
+            name: '',
+            address: '',
+            email: '',
+            description: '',
+          },
+          tempClub: {},
+	  clubId: '',
+          isModalOpen: false,
+          isDeleteModalOpen: false,
+
+          async init() {
+            await this.fetchClubDetails();
+          },
+
+          async fetchClubDetails() {
+            const token = localStorage.getItem('chess_club_token');
+            if (!token) {
+              window.location.href = 'login.html';
+            } else {
+              try {
+                //const urlParams = new URLSearchParams(window.location.search);
+                const response = await fetch(`http://localhost:3000/api/v1/club-info`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  }
+                });
+                const data = await response.json();
+                this.club = data;
+              } catch (error) {
+                console.error('Error fetching club details:', error);
+              }
+            }
+          },
+
+          openModal() {
+            this.tempClub = JSON.parse(JSON.stringify(this.club));
+	    this.clubId = this.club.id;
+            this.isModalOpen = true;
+          },
+
+          closeModal() {
+            this.isModalOpen = false;
+          },
+
+          openDeleteModal() {
+            this.isDeleteModalOpen = true;
+          },
+
+          closeDeleteModal() {
+            this.isDeleteModalOpen = false;
+          },
+
+          async saveChanges() {
+            this.club = JSON.parse(JSON.stringify(this.tempClub));
+            try {
+              const token = localStorage.getItem('chess_club_token');
+              const urlParams = new URLSearchParams(window.location.search);
+
+              const response = await fetch(`http://localhost:3000/api/v1/club-info/${this.clubId}`, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(this.club)
+              });
+
+              if (response.ok) {
+                this.closeModal();
+                await this.fetchClubDetails();
+              } else {
+                console.error('Failed to save changes');
+              }
+            } catch (error) {
+              console.error('Error saving changes:', error);
+            }
+          },
+
+          async deleteClub() {
+            try {
+              const token = localStorage.getItem('club_info_token');
+              const urlParams = new URLSearchParams(window.location.search);
+              const clubId = urlParams.get('id');
+
+              const response = await fetch(`http://localhost:3000/api/v1/clubs/${clubId}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+
+              if (response.ok) {
+                window.location.href = 'clubs.html';
+              } else {
+                console.error('Failed to delete club');
+              }
+            } catch (error) {
+              console.error('Error deleting club:', error);
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
