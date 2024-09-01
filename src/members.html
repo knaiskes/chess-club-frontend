@@ -146,9 +146,12 @@
 
 
       <div class="flex justify-between items-center mt-4 mr-1 ml-1">
-        <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
+	<button @click="prevPage" :disabled="currentPage === 1" :class="{'bg-blue-500 text-white': currentPage !== 1, 'bg-gray-400 text-gray-200': currentPage === 1}"
+		class="px-4 py-2 rounded">Previous</button>
+
         <span>Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span></span>
-        <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+	<button @click="nextPage" :disabled="currentPage === totalPages" :class="{'bg-blue-500 text-white': currentPage !== totalPages, 'bg-gray-400 text-gray-200': currentPage === totalPages}"
+		class="px-4 py-2 rounded">Next</button>
       </div>
     </div>
 
