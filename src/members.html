@@ -21,12 +21,16 @@
 	<h4 class="mb-10 text-1xl text-center font-extrabold leading-none tracking-tight text-gray-900 md:text-1xl lg:text-1xl dark:text-gray" style="margin-right: 10px;" x-text="'('+ membersCount +')'"></h4>
       </div>
       <div class="ml-2 mr-2">
-	<input 
-	  class="px-6 py-2 mb-6 rounded-md border-2 border-gray-300 bg-gray-50 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent" 
-	  type="text" 
-	  x-model="query" 
-	  placeholder="Search" 
-	  @input.debounce.500ms="sendSearchQuery">
+	<div class="flex items-center justify-between mb-6">
+	  <input 
+	    class="px-6 py-2 mb-6 rounded-md border-2 border-gray-300 bg-gray-50 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent" 
+	    type="text" 
+	    x-model="query" 
+	    placeholder="Search" 
+	    @input.debounce.500ms="sendSearchQuery">
+
+	  <button @click="addMemberModal()" class="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 ml-4">Add Member</button>
+	</div>
 
         <table class="min-w-full divide-y divide-gray-200 border-collapse">
           <thead class="bg-gray-50">
@@ -62,6 +66,85 @@
         </table>
       </div>
 
+      <!-- Add Member Modal -->
+      <div x-show="isModalOpen" @click.away="closeModal()" x-data="{ formSubmitted: false }" x-cloak class="fixed inset-0 flex items-center justify-center z-50">
+	<div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl h-auto max-h-screen overflow-y-auto">
+	  <h2 class="text-2xl font-bold mb-4">Add New Member</h2>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">First Name</label>
+	    <input type="text" x-model="member.firstname" class="w-full px-3 py-2 border rounded"
+		   :class="{'border-red-500': formSubmitted && !member.firstname}" required />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Last Name</label>
+	    <input type="text" x-model="member.lastname" class="w-full px-3 py-2 border rounded"
+		   :class="{'border-red-500': formSubmitted && !member.lastname}" required />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Email</label>
+	    <input type="email" x-model="member.email" class="w-full px-3 py-2 border rounded"
+		   :class="{'border-red-500': formSubmitted && !member.email}" required />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Age</label>
+	    <input type="number" min="1" x-model="member.age" class="w-full px-3 py-2 border rounded" />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Gender</label>
+	    <select x-model="member.gender" class="w-full px-3 py-2 border rounded"
+		    :class="{'border-red-500': formSubmitted && !member.gender}" required>
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+	    </select>
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Is Active</label>
+	    <input type="checkbox" x-model="member.is_active" class="px-3 py-2 border rounded" />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Overdue Subscription</label>
+	    <input type="checkbox" x-model="member.overdue_subscription" class="px-3 py-2 border rounded" />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Fide Rating</label>
+	    <input type="number" min="1" x-model="member.fide_rating" class="w-full px-3 py-2 border rounded" />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Lichess.org Profile</label>
+	    <input type="text" x-model="member.lichess_profile" class="w-full px-3 py-2 border rounded" />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Chess.com Profile</label>
+	    <input type="text" x-model="member.chesscom_profile" class="w-full px-3 py-2 border rounded" />
+	  </div>
+
+	  <div class="mb-4">
+	    <label class="block text-gray-700">Fide Profile</label>
+	    <input type="text" x-model="member.fide_profile" class="w-full px-3 py-2 border rounded" />
+	  </div>
+
+	  <div x-show="addMemberModalErrorMessage" class="mb-4 text-red-500" x-text="addMemberModalErrorMessage"></div>
+
+	  <div class="flex justify-end">
+	    <button @click="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 mr-2">Cancel</button>
+	    <button @click="addNewMember()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+	  </div>
+	</div>
+      </div>
+
+
       <div class="flex justify-between items-center mt-4 mr-1 ml-1">
         <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
         <span>Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span></span>
@@ -77,6 +160,22 @@
           perPage: 10,
           query: '',
 	  membersCount: 0,
+	  member: {
+            firstname: '',
+            lastname: '',
+            email: '',
+            gender: '',
+            is_active: false,
+            age: null,
+            fide_rating: null,
+            overdue_subscription: false,
+            lichess_profile: '',
+            chesscom_profile: '',
+            fide_profile: ''
+	  },
+          isModalOpen: false,
+	  addMemberModalErrorMessage: '',
+
 
           async init() {
             await this.fetchMembers();
@@ -101,6 +200,62 @@
               } catch (error) {
                 console.error('Error fetching members:', error);
               }
+            }
+          },
+
+	  addMemberModal() {
+            this.isModalOpen = true;
+          },
+          
+          closeModal() {
+	    this.member = {};
+	    this.addMemberModalErrorMessage = '';
+            this.isModalOpen = false;
+          },
+
+	  async addNewMember() {
+            try {
+	      if (!this.member.firstname) {
+		this.addMemberModalErrorMessage = 'First Name is required.';
+		return;
+              }
+
+              if (!this.member.lastname) {
+		this.addMemberModalErrorMessage = 'Last Name is required.';
+		return;
+              }
+
+	      if (!this.member.email) {
+		this.addMemberModalErrorMessage = 'Email is required.';
+		return;
+              }
+
+	      if (!this.member.gender) {
+		this.addMemberModalErrorMessage = 'Gender is required.';
+		return;
+              }
+
+              const token = localStorage.getItem('chess_club_token');
+              
+              const response = await fetch(`http://localhost:3000/api/v1/members`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(this.member)
+              });
+              
+              if (response.ok) {
+                this.closeModal();
+                await this.fetchMembers();
+              } else {
+                console.error('Failed add member');
+		this.addMemberModalErrorMessage = 'Failed to add member.';
+              }
+            } catch (error) {
+              console.error('Error while adding new member: ', error);
+	      this.addMemberModalErrorMessage = 'An unexpected error occurred while adding a neww member.';
             }
           },
 
