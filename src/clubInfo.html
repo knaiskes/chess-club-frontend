@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club INFO</title>
+    <title>Chess Club INFO</title>
     <link rel="stylesheet" href="../dist/style.css">
     <script src="../node_modules/alpinejs/dist/cdn.js" defer></script>
     <style>
@@ -15,7 +15,7 @@
   <body x-data="clubDetails()" x-init="fetch('./navbar.html').then(response => response.text()).then(html => $refs.navbar.innerHTML = html)" x-cloak>
     <div x-ref="navbar"></div>
     <div class="flex items-center justify-center">
-      <h4 class="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-gray flex items-center mb-4" x-text="club.name"></h4>
+      <h4 class="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-gray flex items-center mb-4">Manage your Club</h4>
     </div>
 
     <div class="flex justify-end mt-4 mb-4 mr-4">
@@ -30,6 +30,7 @@
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Address</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Email</th>
             <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Description</th>
+	    <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Phone</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -40,6 +41,15 @@
               <a :href="'mailto:' + club.email" class="text-blue-500 hover:underline" x-text="club.email"></a>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="club.description"></td>
+	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+	      <template x-if="club.contact_type === 'Landline'">
+		<span>📞</span>
+	      </template>
+	      <template x-if="club.contact_type === 'Mobile'">
+		<span>📱</span>
+	      </template>
+	      <span x-text="club.phone_number"></span>
+	    </td>
           </tr>
         </tbody>
       </table>
@@ -69,6 +79,20 @@
           <label class="block text-gray-700">Description</label>
           <textarea x-model="tempClub.description" class="w-full px-3 py-2 border rounded" required></textarea>
         </div>
+
+	<div class="mb-4">
+          <label class="block text-gray-700">Phone</label>
+          <input type="tel" x-model="tempClub.phone_number" class="w-full px-3 py-2 border rounded" required></input>
+        </div>
+
+	<div class="mb-4">
+	  <label class="block text-gray-700">Contact Type</label>
+	  <select x-model="tempClub.contact_type" class="w-full px-3 py-2 border rounded"
+		  :class="{'border-red-500': !tempClub.contact_type}" required>
+            <option value="Landline">Landline</option>
+            <option value="Mobile">Mobile</option>
+	  </select>
+	</div>
 
         <div class="flex justify-end">
           <button @click="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 mr-2">Cancel</button>
