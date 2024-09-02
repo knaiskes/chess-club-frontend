@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex justify-end mt-4 mb-4 mr-4">
-      <button @click="openModal()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Edit Club</button>
+      <button @click="openModal()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Update INFO</button>
     </div>
     
     <div class="overflow-x-auto">
@@ -58,7 +58,7 @@
     <!-- Edit Modal -->
     <div x-show="isModalOpen" @click.away="closeModal()" x-cloak class="fixed inset-0 flex items-center justify-center z-50">
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl h-auto max-h-screen overflow-y-auto">
-        <h2 class="text-2xl font-bold mb-4">Edit Club</h2>
+        <h2 class="text-2xl font-bold mb-4">Update Your Club's Information</h2>
 
         <div class="mb-4">
           <label class="block text-gray-700">Name</label>
