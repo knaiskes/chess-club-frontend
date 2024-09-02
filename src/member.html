@@ -62,9 +62,30 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.overdue_subscription ? 'Yes' : 'No'"></td>
 	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="new Date(member.joined_at).toDateString()"></td>
 	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.fide_rating !== null ? member.fide_rating : 'N/A'"></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.lichess_profile !== null ? member.lichess_profile : 'N/A'"></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.chesscom_profile !== null ? member.chesscom_profile : 'N/A'"></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="member.fide_profile !== null ? member.fide_profile : 'N/A'"></td>
+	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+	      <template x-if="member.lichess_profile">
+		<a :href="member.lichess_profile" target="_blank" class="text-blue-500 hover:underline" x-text="member.lichess_profile"></a>
+	      </template>
+	      <template x-if="!member.lichess_profile">
+		<span>N/A</span>
+	      </template>
+	    </td>
+	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+	      <template x-if="member.chesscom_profile">
+		<a :href="member.chesscom_profile" target="_blank" class="text-blue-500 hover:underline" x-text="member.chesscom_profile"></a>
+	      </template>
+	      <template x-if="!member.chesscom_profile">
+		<span>N/A</span>
+	      </template>
+	    </td>
+	    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+	      <template x-if="member.fide_profile">
+		<a :href="member.fide_profile" target="_blank" class="text-blue-500 hover:underline" x-text="member.fide_profile"></a>
+	      </template>
+	      <template x-if="!member.fide_profile">
+		<span>N/A</span>
+	      </template>
+	    </td>
           </tr>
         </tbody>
       </table>
